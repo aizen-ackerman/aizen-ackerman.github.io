@@ -675,6 +675,139 @@
       color: var(--fg-muted);
     }
 
+    /* Prank Modal */
+    .prank-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.3s ease-in;
+    }
+
+    .prank-modal.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .prank-content {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 48px;
+      max-width: 420px;
+      text-align: center;
+      animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .prank-state {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .prank-state.hidden {
+      display: none;
+    }
+
+    .prank-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--fg-primary);
+      margin: 0;
+    }
+
+    .prank-subtitle {
+      font-size: 0.9rem;
+      color: var(--fg-muted);
+      margin: 0;
+    }
+
+    .prank-error {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      color: var(--fg-muted);
+      letter-spacing: 0.05em;
+    }
+
+    .prank-button {
+      padding: 14px 28px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--fg-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .prank-button:hover {
+      border-color: var(--fg-primary);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .prank-button:active {
+      transform: scale(0.98);
+    }
+
+    .prank-reveal {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: left;
+    }
+
+    .prank-reveal p {
+      margin: 0 0 12px 0;
+      font-size: 0.95rem;
+      color: var(--fg-secondary);
+      line-height: 1.6;
+    }
+
+    .prank-reveal p:last-child {
+      margin-bottom: 0;
+    }
+
+    .prank-signature {
+      font-size: 0.8rem;
+      color: var(--fg-muted);
+      font-family: 'Courier New', monospace;
+      opacity: 0.7;
+      margin-top: 12px;
+    }
+
     /* Mobile Responsive */
     @media (max-width: 968px) {
       .menu-toggle { display: flex; }
@@ -748,6 +881,11 @@
         width: 100%;
         justify-content: center;
       }
+
+      .prank-content {
+        padding: 32px 24px;
+        margin: 0 16px;
+      }
     }
 
     /* Animations */
@@ -789,6 +927,32 @@
 
 </head>
 <body>
+  <!-- Prank Modal -->
+  <div class="prank-modal active" id="prankModal">
+    <div class="prank-content">
+      <div class="prank-state" id="prankInitial">
+        <div>
+          <h2 class="prank-title">You are pruned</h2>
+          <p class="prank-subtitle">Your access has been terminated.</p>
+        </div>
+        
+        <div class="prank-error">ERROR_ACCESS_DENIED</div>
+        
+        <button class="prank-button" onclick="showReveal()">Show how</button>
+      </div>
+
+      <div class="prank-state hidden" id="prankReveal">
+        <div class="prank-reveal">
+          <p>Just kidding</p>
+          <p>This is just a harmless prank. Your access is completely fine and you can continue exploring the site freely.</p>
+          <p class="prank-signature">— ARTI#FACTS</p>
+        </div>
+        
+        <button class="prank-button" onclick="closePrank()">Continue to website</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Navigation -->
   <nav id="navbar">
     <div class="container">
@@ -1104,6 +1268,16 @@
   </footer>
 
   <script>
+    function showReveal() {
+      document.getElementById('prankInitial').classList.add('hidden');
+      document.getElementById('prankReveal').classList.remove('hidden');
+    }
+
+    function closePrank() {
+      document.getElementById('prankModal').classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
     // Mobile Menu Toggle
     function toggleMenu() {
       document.getElementById('navLinks').classList.toggle('active');
